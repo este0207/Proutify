@@ -23,7 +23,9 @@ async function generateCodeChallenge(codeVerifier) {
 
 async function loginWithSpotify() {
   const codeVerifier = generateCodeVerifier();
-  localStorage.setItem('code_verifier', codeVerifier);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('code_verifier', codeVerifier);
+  }
   const codeChallenge = await generateCodeChallenge(codeVerifier);
   const authUrl = `https://accounts.spotify.com/authorize?` +
     `client_id=${clientId}` +

@@ -23,7 +23,10 @@
     onMount(async () => {
         await loadSpotifySDK();
         window.onSpotifyWebPlaybackSDKReady = () => {
-            const token = localStorage.getItem('spotify_access_token');
+            let token;
+            if (typeof window !== 'undefined') {
+                token = localStorage.getItem('spotify_access_token');
+            }
             player = new window.Spotify.Player({
                 name: 'Proutify Player',
                 getOAuthToken: cb => { cb(token); },
@@ -68,7 +71,7 @@
         fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
             method: 'PUT',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('spotify_access_token'),
+                'Authorization': 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('spotify_access_token') : ''),
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(body)
@@ -79,7 +82,7 @@
         fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`, {
             method: 'PUT',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('spotify_access_token'),
+                'Authorization': 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('spotify_access_token') : ''),
                 'Content-Type': 'application/json',
             }
         });
@@ -109,7 +112,7 @@
         fetch(`https://api.spotify.com/v1/me/player/next?device_id=${deviceId}`, {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('spotify_access_token'),
+                'Authorization': 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('spotify_access_token') : ''),
                 'Content-Type': 'application/json',
             }
         }).then(() => {
@@ -121,7 +124,7 @@
         fetch(`https://api.spotify.com/v1/me/player/previous?device_id=${deviceId}`, {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('spotify_access_token'),
+                'Authorization': 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('spotify_access_token') : ''),
                 'Content-Type': 'application/json',
             }
         }).then(() => {

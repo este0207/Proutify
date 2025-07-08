@@ -8,7 +8,10 @@ let message = 'Connexion à Spotify...';
 onMount(async () => {
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
-  const codeVerifier = localStorage.getItem('code_verifier');
+  let codeVerifier;
+  if (typeof window !== 'undefined') {
+    codeVerifier = localStorage.getItem('code_verifier');
+  }
 
   if (!code) {
     message = 'Erreur : code d\'autorisation manquant.';
@@ -31,7 +34,9 @@ onMount(async () => {
     });
     const data = await response.json();
     if (data.access_token) {
-      localStorage.setItem('spotify_access_token', data.access_token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('spotify_access_token', data.access_token);
+      }
       message = 'Connexion réussie !';
       setTimeout(() => {
         window.location.href = '/';

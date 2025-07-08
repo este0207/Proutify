@@ -2,4 +2,9 @@ body{
     display: flex;
     flex-direction: column;
     height: 90vh;
+    background: linear-gradient(135deg, #181818 0%, #282828 100%);
+}
+
+*{
+    font-family: Arial, Helvetica, sans-serif;
 }

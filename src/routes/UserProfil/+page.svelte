@@ -4,7 +4,10 @@ let user = null;
 let error = '';
 
 onMount(async () => {
-  const token = localStorage.getItem('spotify_access_token');
+  let token;
+  if (typeof window !== 'undefined') {
+    token = localStorage.getItem('spotify_access_token');
+  }
   if (!token) {
     error = 'Token Spotify manquant. Connecte-toi d\'abord.';
     return;
