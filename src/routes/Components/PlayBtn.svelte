@@ -35,6 +35,7 @@
 
             player.addListener('ready', ({ device_id }) => {
                 deviceId = device_id;
+                localStorage.setItem('spotify_device_id', device_id);
                 isReady = true;
             });
             player.addListener('player_state_changed', state => {
