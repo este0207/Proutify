@@ -39,8 +39,4 @@ function handleClick() {
   <button style="background:none;border:none;padding:0;cursor:pointer" on:click={() => handleClick()}>
     <img src={user.images[0].url} alt="Photo de {user.display_name}" style="border-radius:50%; width:48px; height:48px;" />
   </button>
-{:else if error}
-  <button style="background:none;border:none;padding:0;cursor:pointer" on:click={() => window.location.href = '/login'}>
-    Se connecter
-  </button>
 {/if}
