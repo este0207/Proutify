@@ -2,6 +2,7 @@
   export let track = null;
   export let onClose = () => {};
   import { onMount } from 'svelte';
+  import { showNotification } from '../../lib/notificationStore.js';
   let audioFeatures = null;
   let popularity = null;
   let loading = false;
@@ -45,9 +46,9 @@
           'Content-Type': 'application/json'
         }
       });
-      alert('Ajouté à votre bibliothèque !');
+      showNotification('Ajouté à votre bibliothèque !', 'success');
     } catch (e) {
-      alert("Erreur lors de l'ajout à la bibliothèque.");
+      showNotification("Erreur lors de l'ajout à la bibliothèque.", 'error');
     }
   }
 
@@ -67,7 +68,7 @@
         body: JSON.stringify({ uris: [track.uri] })
       });
     } catch (e) {
-      alert("Erreur lors de la lecture du morceau.");
+      showNotification("Erreur lors de la lecture du morceau.", 'error');
     }
   }
 </script>

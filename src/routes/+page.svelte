@@ -3,13 +3,14 @@
     import Header from "./Components/Header.svelte";
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation'; // Ajout pour la redirection
+    import MusicProfile from "./Components/MusicProfile.svelte";
     let isLoggedIn = false;
     let playlists = [];
     let featured = [];
     let newReleases = [];
-    let topPlaylists = [];
     let loading = true;
     let error = '';
+    let selectedTrack = null;
 
     onMount(async () => {
         let token;
@@ -25,6 +26,7 @@
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 let data1 = await res1.json();
+                console.log('Réponse featured:', data1);
                 featured = data1.playlists ? data1.playlists.items : [];
 
                 // Nouveautés (albums)
@@ -32,16 +34,31 @@
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 let data2 = await res2.json();
+                console.log('Réponse new releases:', data2);
                 newReleases = data2.albums ? data2.albums.items : [];
+                console.log('Albums:', data2.albums.items);
 
-                // Playlists populaires (catégorie top)
-                let res3 = await fetch('https://api.spotify.com/v1/browse/categories/toplists/playlists?country=FR&limit=10', {
+                // Récupérer toutes les catégories
+                let resCat = await fetch('https://api.spotify.com/v1/browse/categories?country=FR&limit=50', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                let data3 = await res3.json();
-                topPlaylists = data3.playlists ? data3.playlists.items : [];
+                let dataCat = await resCat.json();
+                console.log('Réponse catégories:', dataCat);
+                console.log('Catégories:', dataCat.categories.items);
+
+                // Chercher la catégorie "toplists"
+                let toplistCat = dataCat.categories.items.find(
+                    cat => cat.id === "toplists" || cat.name.toLowerCase().includes("top")
+                );
+                if (toplistCat) {
+                    let res3 = await fetch(`https://api.spotify.com/v1/browse/categories/${toplistCat.id}/playlists?country=FR&limit=10`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                } else {
+
+                }
             } catch (e) {
-                error = 'Erreur lors de la récupération des playlists Spotify.';
+                error = 'Erreur lors de la récupération des playlists Spotify : ' + e.message;
             }
             loading = false;
         }
@@ -49,6 +66,23 @@
 
     function handleLogin() {
         goto('/login');
+    }
+
+    function closeProfile() {
+        selectedTrack = null;
+    }
+    async function openMusicProfileFromAlbum(album) {
+        let token = localStorage.getItem('spotify_access_token');
+        let res = await fetch(`https://api.spotify.com/v1/albums/${album.id}/tracks?limit=1`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        let data = await res.json();
+        if (data.items && data.items.length > 0) {
+            selectedTrack = {
+                ...data.items[0],
+                album: album // pour la pochette, etc.
+            };
+        }
     }
 </script>
 
@@ -81,7 +115,7 @@
         </section>
     {:else}
         {#if loading}
-            <div style="text-align:center;margin-top:60px;">Chargement des playlists Spotify...</div>
+            <div style="text-align:center;margin-top:60px;">Chargement des playlists Proutify...</div>
         {:else if error}
             <div style="color:red;text-align:center;">{error}</div>
         {:else}
@@ -100,20 +134,9 @@
                 <h2>Nouveautés</h2>
                 <div class="horizontal-scroll">
                     {#each newReleases as album}
-                        <div class="playlist-card">
+                        <div class="playlist-card" on:click={() => openMusicProfileFromAlbum(album)}>
                             <img src={album.images[0].url} alt={album.name} />
                             <span>{album.name}</span>
-                        </div>
-                    {/each}
-                </div>
-            </section>
-            <section class="spotify-section">
-                <h2>Top Playlists</h2>
-                <div class="horizontal-scroll">
-                    {#each topPlaylists as playlist}
-                        <div class="playlist-card">
-                            <img src={playlist.images[0].url} alt={playlist.name} />
-                            <span>{playlist.name}</span>
                         </div>
                     {/each}
                 </div>
@@ -161,21 +184,7 @@
 .btn-primary:hover {
     background: #1ed760;
 }
-/* .btn-secondary {
-    background: transparent;
-    color: #fff;
-    border: 2px solid #fff;
-    padding: 12px 32px;
-    border-radius: 30px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-}
-.btn-secondary:hover {
-    background: #fff;
-    color: #181818;
-} */
+
 .featured {
     margin-top: 50px;
     padding: 0 20px;
@@ -247,3 +256,7 @@
     max-width: 180px;
 }
 </style>
+
+{#if selectedTrack}
+    <MusicProfile track={selectedTrack} onClose={closeProfile} />
+{/if}

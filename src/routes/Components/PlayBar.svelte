@@ -2,15 +2,7 @@
     import PlayBtn from "./PlayBtn.svelte";
     import { imageUrl, currentTrack } from '$lib/playerStore';
     let volume = 50;
-    
-    $: volumeIcon = volume == 0
-        ? 'fa-volume-xmark'
-        : volume < 40
-            ? 'fa-volume-low'
-            : volume < 80
-                ? 'fa-volume'
-                : 'fa-volume-high';
-
+    let debounceTimeout;
     // Fonction pour régler le volume sur le device Spotify
     async function setSpotifyVolume(vol) {
         if (typeof window === 'undefined') return; // Ne rien faire côté serveur
@@ -28,8 +20,13 @@
         }
     }
 
-    // Appel à chaque changement de volume
-    $: setSpotifyVolume(volume);
+    // Debounce l'appel à l'API Spotify
+    $: {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            setSpotifyVolume(volume);
+        }, 200); // 200 ms de délai, tu peux ajuster
+    }
 </script>
 
 <div class="barContainer">
@@ -41,9 +38,6 @@
         <PlayBtn></PlayBtn>
     </div>
     <div class="volumeBtn">
-        <button aria-label="Régler le volume">
-            <i class={`fa-solid ${volumeIcon}`}></i>
-        </button>
         <input type="range" min="0" max="100" bind:value={volume} />
     </div>
 </div>
@@ -89,19 +83,13 @@
         border-radius: 10px;
     }
 
-    .fa-solid{
-        background: transparent;
-        border: none;
-        color: rgb(0, 0, 0);
-    }
-
     .volumeBtn {
         display: flex;
         align-items: center;
         gap: 10px;
     }
     .volumeBtn input[type="range"] {
-        width: 80px;
+        width: 150px;
         accent-color: #1db954;
     }
 
