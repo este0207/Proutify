@@ -1,5 +1,6 @@
 <script>
 import { onMount } from 'svelte';
+import { goto } from '$app/navigation';
 let user = null;
 let error = '';
 
@@ -27,7 +28,7 @@ onMount(async () => {
 
 function handleClick() {
     console.log("redirection a user profil")
-    window.location.href = '/UserProfil';
+    goto('/UserProfil');
 }
 </script>
 

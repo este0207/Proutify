@@ -1,14 +1,14 @@
 
 <script>
     import UserPicture from "./UserPicture.svelte";
+    import { goto } from '$app/navigation';
 
-    function handleClick(){
-        window.location.href = '/likes';
+    function handleClick() {
+        goto('/likes');
     }
 
-    function returnHome(){
-        window.location.href = '/';
-
+    function returnHome() {
+        goto('/');
     }
 </script>
 
