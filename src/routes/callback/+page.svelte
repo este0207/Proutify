@@ -2,7 +2,9 @@
 import { onMount } from 'svelte';
 
 const clientId = '8d46010311a641e8b31e723f1d3cf467'; 
-const redirectUri = 'http://127.0.0.1:5173/callback';
+const redirectUri = typeof window !== 'undefined' && window.location.hostname === 'proutify.vercel.app'
+  ? 'https://proutify.vercel.app/callback'
+  : 'http://127.0.0.1:5173/callback';
 let message = 'Connexion à Spotify...';
 
 onMount(async () => {

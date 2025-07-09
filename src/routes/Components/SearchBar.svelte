@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import MusicProfile from './MusicProfile.svelte';
+  import { currentTrack } from '$lib/playerStore';
   let query = '';
   let suggestions = [];
   let loading = false;
@@ -15,6 +16,8 @@
       token = localStorage.getItem('spotify_access_token') || '';
     }
   });
+
+  let searchSource = 'spotify'; // 'spotify' ou 'youtube'
 
   // Fonction de recherche Spotify
   async function searchSpotify(q) {
@@ -43,18 +46,102 @@
     loading = false;
   }
 
+  // Fonction de recherche YouTube sans clé API
+  async function searchYouTube(q) {
+    if (!q) {
+      suggestions = [];
+      return;
+    }
+    loading = true;
+    error = '';
+    try {
+      const res = await fetch(`https://corsproxy.io/?https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`);
+      const text = await res.text();
+      // Extraction des données JSON de la page YouTube
+      const initialDataMatch = text.match(/var ytInitialData = (\{.*?\});<\/script>/);
+      if (initialDataMatch) {
+        const ytData = JSON.parse(initialDataMatch[1]);
+        // Extraction des vidéos
+        const videoItems = ytData.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents
+          .flatMap(section => section.itemSectionRenderer?.contents || [])
+          .filter(item => item.videoRenderer)
+          .map(item => item.videoRenderer);
+        suggestions = videoItems.map(video => ({
+          id: video.videoId,
+          title: video.title.runs[0].text,
+          thumbnail: video.thumbnail.thumbnails[0].url,
+          author: video.ownerText?.runs[0]?.text || '',
+          type: 'youtube'
+        }));
+      } else {
+        suggestions = [];
+      }
+    } catch (e) {
+      error = 'Erreur lors de la recherche YouTube.';
+      suggestions = [];
+    }
+    loading = false;
+  }
+
+  async function pauseSpotify() {
+    let token = '';
+    if (typeof window !== 'undefined') {
+      token = localStorage.getItem('spotify_access_token') || '';
+    }
+    if (!token) return;
+    try {
+      await fetch('https://api.spotify.com/v1/me/player/pause', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+    } catch (e) {}
+  }
+
   function handleInput(e) {
     query = e.target.value;
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(() => {
-      searchSpotify(query);
+      if (searchSource === 'spotify') {
+        searchSpotify(query);
+      } else {
+        searchYouTube(query);
+      }
     }, 350);
   }
 
+  function setSource(source) {
+    if (searchSource !== source) {
+      searchSource = source;
+      suggestions = [];
+      query = '';
+      error = '';
+    }
+  }
+
   let selectedTrack = null;
+  let searchInputRef;
 
   function openProfile(track) {
+    if (searchSource === 'youtube') {
+      pauseSpotify(); // On met en pause Spotify si besoin
+      // On ajoute la playlist, l'index courant et la liste complète des objets vidéo
+      const playlist = suggestions.map(v => v.id);
+      const playlistIndex = suggestions.findIndex(v => v.id === track.id);
+      const playlistData = suggestions;
+      currentTrack.set({
+        source: 'youtube',
+        video: { ...track, _playlist: playlist, _playlistIndex: playlistIndex, _playlistData: playlistData }
+      });
+    } else {
+      currentTrack.set({ source: 'spotify', track });
+    }
     selectedTrack = track;
+    suggestions = [];
+    query = '';
+    if (searchInputRef) searchInputRef.blur();
   }
   function closeProfile() {
     selectedTrack = null;
@@ -62,14 +149,19 @@
 </script>
 
 <div class="searchbar-container">
+  <div class="search-source-btns">
+    <button class:active={searchSource === 'spotify'} on:click={() => setSource('spotify')}>Spotify</button>
+    <button class:active={searchSource === 'youtube'} on:click={() => setSource('youtube')}>YouTube</button>
+  </div>
   <input
     class="search-input"
     type="text"
-    placeholder="Rechercher un titre Spotify..."
+    placeholder={searchSource === 'spotify' ? 'Rechercher un titre Spotify...' : 'Rechercher sur YouTube...'}
     on:input={handleInput}
     bind:value={query}
-    aria-label="Recherche Spotify"
+    aria-label={searchSource === 'spotify' ? 'Recherche Spotify' : 'Recherche YouTube'}
     autocomplete="off"
+    bind:this={searchInputRef}
   />
   {#if loading}
     <div class="suggestions"><span class="loader"></span></div>
@@ -77,15 +169,25 @@
     <div class="suggestions error">{error}</div>
   {:else if suggestions.length > 0 && query}
     <ul class="suggestions">
-      {#each suggestions as track}
-        <li class="suggestion-item" on:click={() => openProfile(track)}>
-          {#if track.album && track.album.images && track.album.images[0]}
-            <img src={track.album.images[0].url} alt={track.name} class="suggestion-img" />
-          {/if}
-          <span class="suggestion-title">{track.name}</span>
-          <span class="suggestion-artist">{track.artists[0].name}</span>
-        </li>
-      {/each}
+      {#if searchSource === 'spotify'}
+        {#each suggestions as track}
+          <li class="suggestion-item" on:click={() => openProfile(track)}>
+            {#if track.album && track.album.images && track.album.images[0]}
+              <img src={track.album.images[0].url} alt={track.name} class="suggestion-img" />
+            {/if}
+            <span class="suggestion-title">{track.name}</span>
+            <span class="suggestion-artist">{track.artists[0].name}</span>
+          </li>
+        {/each}
+      {:else}
+        {#each suggestions as video}
+          <li class="suggestion-item" on:click={() => openProfile(video)}>
+            <img src={video.thumbnail} alt={video.title} class="suggestion-img" />
+            <span class="suggestion-title">{video.title}</span>
+            <span class="suggestion-artist">{video.author}</span>
+          </li>
+        {/each}
+      {/if}
     </ul>
   {/if}
 </div>
@@ -111,7 +213,7 @@
   font-size: 1.1rem;
   background: #222;
   color: #fff;
-  box-shadow: 0 2px 8px rgba(30,185,84,0.10);
+  box-shadow: 0 8px 32px rgba(33,150,243,0.15);
   outline: none;
 }
 .suggestions {
@@ -121,7 +223,7 @@
   width: 100%;
   background: #181818;
   border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(30,185,84,0.10);
+  box-shadow: 0 8px 32px rgba(33,150,243,0.15);
   margin-top: 6px;
   z-index: 100;
   padding: 0;
@@ -160,7 +262,7 @@
   font-size: 1.05rem;
 }
 .suggestion-artist {
-  color: #1db954;
+  color: #2196f3;
   font-size: 0.95rem;
   margin-left: 8px;
 }
@@ -168,7 +270,7 @@
   display: inline-block;
   width: 28px;
   height: 28px;
-  border: 3px solid #1db954;
+  border: 3px solid #2196f3;
   border-radius: 50%;
   border-top: 3px solid #fff;
   animation: spin 0.8s linear infinite;
@@ -177,5 +279,28 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.search-source-btns {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+.search-source-btns button {
+  flex: 1;
+  padding: 8px 0;
+  border: none;
+  border-radius: 12px 12px 0 0;
+  background: #181818;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.search-source-btns button.active,
+.search-source-btns button:focus {
+  background: #2196f3;
+  color: #fff;
 }
 </style> 

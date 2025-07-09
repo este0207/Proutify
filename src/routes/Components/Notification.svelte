@@ -46,7 +46,7 @@
   pointer-events: auto;
 }
 .notification.success {
-  background: #1db954;
+  background: #2196f3;
   color: #fff;
 }
 .notification.error {

@@ -113,7 +113,7 @@
   background: #181818;
   border-radius: 24px;
   padding: 36px 32px 28px 32px;
-  box-shadow: 0 8px 32px rgba(30,217,96,0.15);
+  box-shadow: 0 8px 32px rgba(33,150,243,0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -139,7 +139,7 @@ h2 {
 }
 h3 {
   font-size: 1.2rem;
-  color: #1db954;
+  color: #2196f3;
   margin: 0 0 8px 0;
 }
 .album {
@@ -156,7 +156,7 @@ h3 {
   margin-top: 10px;
 }
 .btn-primary {
-  background: #1db954;
+  background: #2196f3;
   color: #fff;
   border: none;
   padding: 10px 22px;
@@ -172,7 +172,7 @@ h3 {
 .btn-secondary {
   background: transparent;
   color: #fff;
-  border: 2px solid #1db954;
+  border: 2px solid #2196f3;
   padding: 10px 22px;
   border-radius: 30px;
   font-size: 1rem;
@@ -181,7 +181,7 @@ h3 {
   transition: background 0.2s, color 0.2s;
 }
 .btn-secondary:hover {
-  background: #1db954;
+  background: #2196f3;
   color: #181818;
 }
 .close-btn {
@@ -198,7 +198,7 @@ h3 {
   display: inline-block;
   width: 28px;
   height: 28px;
-  border: 3px solid #1db954;
+  border: 3px solid #2196f3;
   border-radius: 50%;
   border-top: 3px solid #fff;
   animation: spin 0.8s linear infinite;

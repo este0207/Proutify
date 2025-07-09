@@ -11,6 +11,17 @@
     let loading = true;
     let error = '';
     let selectedTrack = null;
+    let audiobooks = [];
+
+
+    async function fetchAudiobooks(query = 'roman') {
+        let token = localStorage.getItem('spotify_access_token');
+        let res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=audiobook&limit=10`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        let data = await res.json();
+        audiobooks = data.audiobooks && data.audiobooks.items ? data.audiobooks.items : [];
+    }
 
     onMount(async () => {
         let token;
@@ -57,8 +68,10 @@
                 } else {
 
                 }
+
+                await fetchAudiobooks('roman');
             } catch (e) {
-                error = 'Erreur lors de la récupération des playlists Spotify : ' + e.message;
+                error = 'Erreur lors de la récupération des livres audio Spotify : ' + e.message;
             }
             loading = false;
         }
@@ -80,7 +93,7 @@
         if (data.items && data.items.length > 0) {
             selectedTrack = {
                 ...data.items[0],
-                album: album // pour la pochette, etc.
+                album: album 
             };
         }
     }
@@ -120,24 +133,35 @@
             <div style="color:red;text-align:center;">{error}</div>
         {:else}
             <section class="spotify-section">
-                <h2>Playlists mises en avant</h2>
-                <div class="horizontal-scroll">
-                    {#each featured as playlist}
-                        <div class="playlist-card">
-                            <img src={playlist.images[0].url} alt={playlist.name} />
-                            <span>{playlist.name}</span>
-                        </div>
-                    {/each}
-                </div>
+                <h2>Livres audio à découvrir</h2>
+                {#if audiobooks.length > 0}
+                    <div class="horizontal-scroll">
+                        {#each audiobooks as audiobook}
+                            <div class="playlist-card">
+                                <img src={audiobook.images[0]?.url} alt={audiobook.name} />
+                                <span style="margin-top:10px;font-size:1.2rem;font-weight:700;">{audiobook.name}</span>
+                                <!-- <p style="margin:10px 0;color:#b3b3b3;font-size:0.95rem;">{audiobook.description}</p> -->
+                                <a href={audiobook.external_urls.spotify} target="_blank" rel="noopener" class="btn-primary" style="margin-top:10px;">Écouter sur Spotify</a>
+                            </div>
+                        {/each}
+                    </div>
+                {:else}
+                    <div>Aucun livre audio disponible.</div>
+                {/if}
             </section>
             <section class="spotify-section">
                 <h2>Nouveautés</h2>
                 <div class="horizontal-scroll">
                     {#each newReleases as album}
-                        <div class="playlist-card" on:click={() => openMusicProfileFromAlbum(album)}>
+                        <button
+                            class="playlist-card"
+                            type="button"
+                            on:click={() => openMusicProfileFromAlbum(album)}
+                            aria-label="Ouvrir le profil de l’album {album.name}"
+                        >
                             <img src={album.images[0].url} alt={album.name} />
                             <span>{album.name}</span>
-                        </div>
+                        </button>
                     {/each}
                 </div>
             </section>
@@ -171,7 +195,7 @@
     gap: 20px;
 }
 .btn-primary {
-    background: #1db954;
+    background: #2196f3;
     color: #fff;
     border: none;
     padding: 12px 32px;
@@ -211,6 +235,7 @@
     box-shadow: 0 4px 24px rgba(0,0,0,0.2);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
+    border: none;
 }
 .playlist-card:hover {
     transform: translateY(-8px) scale(1.04);
@@ -228,6 +253,9 @@
     font-weight: 600;
     color: #fff;
 }
+.playlist-card:focus {
+    outline: 2px solid #2196f3;
+}
 .spotify-section {
     margin-top: 40px;
     padding: 0 20px;
@@ -238,13 +266,13 @@
     gap: 24px;
     padding-bottom: 10px;
     scrollbar-width: thin;
-    scrollbar-color: #1db954 #222;
+    scrollbar-color: #2196f3 #222;
 }
 .horizontal-scroll::-webkit-scrollbar {
     height: 8px;
 }
 .horizontal-scroll::-webkit-scrollbar-thumb {
-    background: #1db954;
+    background: #2196f3;
     border-radius: 4px;
 }
 .horizontal-scroll::-webkit-scrollbar-track {

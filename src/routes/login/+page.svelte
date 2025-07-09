@@ -16,7 +16,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #1db954 0%, #191414 100%);
+  background: linear-gradient(135deg, #2196f3 0%, #191414 100%);
 }
 
 h1 {
@@ -42,7 +42,7 @@ h1 {
   margin-top: 1rem;
   padding: 0.75rem 2rem;
   border-radius: 2rem;
-  background: #1db954;
+  background: #2196f3;
   color: #fff;
   font-weight: bold;
   border: none;

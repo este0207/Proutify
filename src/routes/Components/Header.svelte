@@ -15,7 +15,8 @@
 
 <div class="header">
     <button class="LogoBtn" on:click={returnHome} aria-label="Accueil">
-        <img src="/Proutify_logo.png" alt="Logo" class="Logo" />
+        <!-- <img src="/Proutify_logo.png" alt="Logo" class="Logo" /> -->
+         <h1 class="Logo" style="color: aliceblue;">Proutify</h1>
     </button>
     <div class="searchbar-center">
         <SearchBar />
@@ -60,8 +61,17 @@
       background: none;
       border: none;
       padding: 0;
-      width: 7%;
+      margin: 10px;
+      border-radius: 20px;
+      width: 10%;
+      background-color:#242424;
       cursor: pointer;
+      box-shadow: 5px 5px 10px rgba(33,150,243,0.15);
+      transition: 0.5s;
+    }
+
+    .LogoBtn:hover{
+        transform: scale(1.1);
     }
 
     .likeBtn{
@@ -71,7 +81,7 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #1db954 0%, #111 100%);
+        background: linear-gradient(135deg, #2196f3 0%, #111 100%);
         border: none;
         box-shadow: 0 2px 8px rgba(30,185,84,0.15);
         cursor: pointer;
@@ -79,12 +89,12 @@
         position: relative;
     }
     .likeBtn:hover {
-        background: linear-gradient(135deg, #111 0%, #1db954 100%);
+        background: linear-gradient(135deg, #111 0%, #2196f3 100%);
         transform: translateY(-2px) scale(1.08);
         box-shadow: 0 4px 16px rgba(30,185,84,0.25);
     }
     .likeBtn i {
-        color: #1db954;
+        color: #2196f3;
         font-size: 1.4rem;
         transition: transform 0.2s, color 0.2s;
         text-shadow: 0 1px 4px #000a;

@@ -1,6 +1,9 @@
 import { writable } from 'svelte/store';
-export const imageUrl = writable(''); 
-// Nouveau store pour le morceau courant
+
+// currentTrack peut être :
+// { source: 'spotify', track: { ...objet Spotify... } }
+// ou { source: 'youtube', video: { id, title, thumbnail, author } }
 export const currentTrack = writable(null);
-// Nouveau store pour l'état de lecture
+
+export const imageUrl = writable(''); 
 export const isPlaying = writable(false); 

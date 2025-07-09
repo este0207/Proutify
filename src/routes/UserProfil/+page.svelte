@@ -80,7 +80,7 @@ function logout() {
     font-weight: 800;
 }
 .profile-card {
-    background: #222;
+    background: #2196f3;
     border-radius: 18px;
     padding: 32px 28px 24px 28px;
     display: flex;
@@ -113,7 +113,7 @@ function logout() {
     color: #888;
 }
 .btn-primary.logout-btn {
-    background: #1db954;
+    background: #2196f3;
     color: #fff;
     border: none;
     padding: 12px 32px;

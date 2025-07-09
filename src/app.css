@@ -1,8 +1,10 @@
 body{
     display: flex;
     flex-direction: column;
-    height: 90vh;
-    background: linear-gradient(135deg, #181818 0%, #282828 100%);
+    margin: 0;
+    padding: 0;
+    /* height: 90vh; */
+    background: linear-gradient(135deg, #1976d2 0%, #64b5f6 100%);
 }
 
 *{

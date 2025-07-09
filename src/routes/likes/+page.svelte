@@ -118,7 +118,7 @@
 }
 .card:hover {
   transform: translateY(-8px) scale(1.04);
-  box-shadow: 0 8px 32px rgba(30,217,96,0.15);
+  box-shadow: 0 8px 32px rgba(33,150,243,0.15);
   background: #282828;
 }
 .card img {
@@ -138,7 +138,7 @@
 }
 .track-artist {
   font-size: 1rem;
-  color: #1db954;
+  color: #2196f3;
   text-align: center;
 }
 .empty {
@@ -149,7 +149,7 @@
 }
 .loader {
   border: 6px solid #222;
-  border-top: 6px solid #1db954;
+  border-top: 6px solid #2196f3;
   border-radius: 50%;
   width: 48px;
   height: 48px;
