@@ -29,7 +29,7 @@
 
 <div class="header">
     <button class="LogoBtn" on:click={returnHome} aria-label="Accueil">
-        <h1 class="Logo">Proutify</h1>
+        <h1 class="Logo">Sonora</h1>
     </button>
     <div class="searchbar-center">
         <SearchBar />
