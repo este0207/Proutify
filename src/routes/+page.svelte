@@ -103,7 +103,7 @@
 <div class="mainPage">
     {#if !isLoggedIn}
         <section class="hero">
-            <h1>Bienvenue sur Proutify</h1>
+            <h1>Bienvenue sur Sonora</h1>
             <p>Écoutez, découvrez et partagez la musique que vous aimez.</p>
             <div class="actions">
                 <button class="btn-primary" on:click={handleLogin}>Se connecter</button>
