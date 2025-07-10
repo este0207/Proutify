@@ -1,8 +1,8 @@
 <script>
 // Paramètres Spotify
 const clientId = '8d46010311a641e8b31e723f1d3cf467';      
-const redirectUri = typeof window !== 'undefined' && window.location.hostname === 'proutify.vercel.app'
-  ? 'https://proutify.vercel.app/callback'
+const redirectUri = typeof window !== 'undefined' && window.location.hostname.endsWith('vercel.app')
+  ? `https://${window.location.hostname}/callback`
   : 'http://127.0.0.1:5173/callback';
 const scope = 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state user-library-read user-library-modify';
 
