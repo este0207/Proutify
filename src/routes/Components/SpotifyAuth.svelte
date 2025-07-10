@@ -40,6 +40,27 @@ async function loginWithSpotify() {
 }
 </script>
 
-<button on:click={loginWithSpotify}>
+<button class="login-btn" on:click={loginWithSpotify}>
   Se connecter avec Spotify
 </button> 
+
+<style>
+  .login-btn {
+    padding: 10px 28px;
+    border-radius: 24px;
+    border: none;
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+    color: #fff;
+    font-size: 1.08rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px var(--color-shadow);
+    cursor: pointer;
+    transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+    margin-top: 18px;
+}
+.login-btn:hover {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    box-shadow: 0 4px 16px var(--color-shadow);
+    transform: scale(1.06);
+}
+</style>

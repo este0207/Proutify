@@ -89,6 +89,26 @@
   }
 </script>
 
+<style>
+.youtubePlayerContainer {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px var(--color-shadow);
+    border: 1px solid var(--color-border);
+    padding: 12px 18px;
+    margin: 18px auto;
+    max-width: 600px;
+    width: 100%;
+    transition: background var(--transition), box-shadow var(--transition);
+}
+@media (max-width: 600px) {
+    .youtubePlayerContainer {
+        padding: 6px 2vw;
+        max-width: 98vw;
+    }
+}
+</style>
+
 <!-- Le player est caché (audio only) -->
 <div style="width:0;height:0;overflow:hidden;">
   <div id={playerId}></div>

@@ -43,7 +43,7 @@ function logout() {
 </script>
 
 <Header />
-<div class="mainPage">
+<div class="userprofil-wrapper">
   {#if loading}
     <div style="text-align:center;margin-top:60px;">Chargement du profil...</div>
   {:else if error}
@@ -65,31 +65,43 @@ function logout() {
 </div>
 
 <style>
-.mainPage {
-    min-height: 100vh;
-    color: #fff;
-    padding: 0 0 40px 0;
+.userprofil-wrapper {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 24px var(--color-shadow);
+    border: 1px solid var(--color-border);
+    padding: 32px 24px;
+    margin-top: 32px;
+    transition: background var(--transition), box-shadow var(--transition);
 }
 .profile-section {
     text-align: center;
-    padding: 60px 20px 40px 20px;
+    padding: 36px 18px 18px 18px;
 }
 .profile-section h1 {
-    font-size: 2.5rem;
-    margin-bottom: 30px;
+    font-size: 2.1rem;
+    margin-bottom: 18px;
     font-weight: 800;
+    color: var(--color-primary);
+    letter-spacing: 0.03em;
+    text-shadow: 0 2px 12px var(--color-primary-light), 0 1px 0 #fff2;
 }
 .profile-card {
-    background: #2196f3;
-    border-radius: 18px;
+    background: var(--color-bg);
+    border-radius: 24px;
     padding: 32px 28px 24px 28px;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 320px;
     margin: 0 auto;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 24px var(--color-shadow);
     gap: 16px;
+    border: 1px solid var(--color-border);
+    animation: fadeInUp 0.5s cubic-bezier(.4,0,.2,1);
 }
 .profile-img {
     width: 120px;
@@ -97,34 +109,97 @@ function logout() {
     border-radius: 50%;
     margin-bottom: 12px;
     object-fit: cover;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px var(--color-shadow);
+    border: 2px solid var(--color-primary);
+    background: #fff;
+    transition: box-shadow 0.35s cubic-bezier(.4,0,.2,1), transform 0.35s cubic-bezier(.4,0,.2,1);
+}
+.profile-img:hover {
+    transform: scale(1.04) rotate(-2deg);
+    box-shadow: 0 8px 32px var(--color-shadow);
 }
 .profile-name {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-primary);
+    text-align: center;
 }
 .profile-email {
     font-size: 1.1rem;
-    color: #b3b3b3;
+    color: var(--color-text-secondary);
+    text-align: center;
 }
 .profile-id {
     font-size: 0.95rem;
-    color: #888;
+    color: var(--color-text-secondary);
+    text-align: center;
 }
 .btn-primary.logout-btn {
-    background: #2196f3;
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
     color: #fff;
     border: none;
-    padding: 12px 32px;
-    border-radius: 30px;
-    font-size: 1.1rem;
-    font-weight: 700;
+    padding: 10px 28px;
+    border-radius: 24px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px var(--color-shadow);
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
     margin-top: 18px;
 }
 .btn-primary.logout-btn:hover {
-    background: #1ed760;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    box-shadow: 0 4px 16px var(--color-shadow);
+    transform: scale(1.06);
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(32px) scale(0.96); }
+    to { opacity: 1; transform: none; }
+}
+@media (max-width: 900px) {
+    .userprofil-wrapper {
+        padding: 12px 2vw;
+        margin-top: 12px;
+    }
+    .profile-card {
+        width: 98vw;
+        min-width: 0;
+        padding: 18px 2vw 12px 2vw;
+    }
+    .profile-img {
+        width: 80px;
+        height: 80px;
+    }
+}
+@media (max-width: 600px) {
+    .userprofil-wrapper {
+        padding: 6px 1vw;
+        margin-top: 6px;
+    }
+    .profile-section {
+        padding: 12px 2vw 8px 2vw;
+    }
+    .profile-section h1 {
+        font-size: 1rem;
+    }
+    .profile-card {
+        width: 100vw;
+        min-width: 0;
+        padding: 8px 2vw 6px 2vw;
+    }
+    .profile-img {
+        width: 48px;
+        height: 48px;
+    }
+    .profile-name {
+        font-size: 0.95rem;
+    }
+    .profile-email, .profile-id {
+        font-size: 0.8rem;
+    }
+    .btn-primary.logout-btn {
+        font-size: 0.88rem;
+        padding: 7px 6px;
+    }
 }
 </style> 

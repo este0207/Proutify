@@ -49,7 +49,7 @@
 </script>
 
 <Header />
-<div class="likesPage">
+<div class="likes-wrapper">
   <section class="likes-hero">
     <h1>Musiques likées</h1>
     <p>Retrouvez ici tous vos morceaux favoris sauvegardés sur Spotify.</p>
@@ -76,110 +76,121 @@
 </div>
 
 <style>
-.likesPage {
-  min-height: 100vh;
-  color: #fff;
-  padding-bottom: 40px;
+.likes-wrapper {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 24px var(--color-shadow);
+    border: 1px solid var(--color-border);
+    padding: 32px 24px;
+    margin-top: 32px;
+    transition: background var(--transition), box-shadow var(--transition);
 }
 .likes-hero {
-  text-align: center;
-  padding: 50px 20px 30px 20px;
+    text-align: center;
+    padding: 36px 18px 18px 18px;
 }
 .likes-hero h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 10px;
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+    letter-spacing: 0.03em;
+    text-shadow: 0 2px 12px var(--color-primary-light), 0 1px 0 #fff2;
 }
 .likes-hero p {
-  color: #b3b3b3;
-  font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    font-size: 1.08rem;
+    margin-bottom: 0;
 }
 .likes-list {
-  padding: 0 30px;
+    padding: 0 0;
 }
 .MusicContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
 }
 .card {
-  background: #222;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
-  border: none;
-  padding: 20px 18px 14px 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 170px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
+    background: var(--color-bg);
+    border-radius: 18px;
+    box-shadow: 0 2px 12px var(--color-shadow);
+    border: 1px solid var(--color-border);
+    padding: 20px 18px 14px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 170px;
+    transition: background var(--transition), box-shadow var(--transition), transform 0.18s cubic-bezier(.4,0,.2,1);
+    cursor: pointer;
+    animation: fadeInUp 0.5s cubic-bezier(.4,0,.2,1);
+    will-change: transform, box-shadow;
 }
 .card:hover {
-  transform: translateY(-8px) scale(1.04);
-  box-shadow: 0 8px 32px rgba(33,150,243,0.15);
-  background: #282828;
+    background: var(--color-primary-light);
+    box-shadow: 0 6px 24px var(--color-shadow);
+    transform: translateY(-4px) scale(1.04);
+}
+.card:active {
+    transform: scale(0.97);
+    box-shadow: 0 1px 2px var(--color-shadow);
 }
 .card img {
-  width: 110px;
-  height: 110px;
-  border-radius: 12px;
-  margin-bottom: 14px;
-  object-fit: cover;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    width: 110px;
+    height: 110px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    object-fit: cover;
+    box-shadow: 0 1px 8px var(--color-shadow);
+    border: 1px solid var(--color-border);
+    background: #fff;
 }
 .track-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 4px;
-  text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 4px;
+    text-align: center;
 }
 .track-artist {
-  font-size: 1rem;
-  color: #2196f3;
-  text-align: center;
+    font-size: 1rem;
+    color: var(--color-primary);
+    text-align: center;
 }
 .empty {
-  text-align: center;
-  color: #b3b3b3;
-  margin-top: 40px;
-  font-size: 1.2rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-top: 40px;
+    font-size: 1.2rem;
 }
 .loader {
-  border: 6px solid #222;
-  border-top: 6px solid #2196f3;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  animation: spin 1s linear infinite;
-  margin: 60px auto 40px auto;
-  display: block;
+    border: 6px solid var(--color-bg-secondary);
+    border-top: 6px solid var(--color-primary);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+    margin: 60px auto 40px auto;
+    display: block;
 }
 @keyframes spin {
-  0% { transform: rotate(0deg);}
-  100% { transform: rotate(360deg);}
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(32px) scale(0.96); }
+    to { opacity: 1; transform: none; }
 }
 @media (max-width: 900px) {
-  .MusicContainer {
-    gap: 18px;
-  }
-  .card {
-    width: 140px;
-    padding: 14px 10px 10px 10px;
-  }
-  .card img {
-    width: 80px;
-    height: 80px;
-  }
-}
-@media (max-width: 600px) {
-  .likes-hero h1 {
-    font-size: 1.5rem;
+  .likes-wrapper {
+    padding: 12px 2vw;
+    margin-top: 12px;
   }
   .MusicContainer {
-    gap: 10px;
+    gap: 12px;
   }
   .card {
     width: 110px;
@@ -188,6 +199,41 @@
   .card img {
     width: 60px;
     height: 60px;
+  }
+  .track-title {
+    font-size: 0.95rem;
+  }
+  .track-artist {
+    font-size: 0.85rem;
+  }
+}
+@media (max-width: 600px) {
+  .likes-wrapper {
+    padding: 6px 1vw;
+    margin-top: 6px;
+  }
+  .likes-hero {
+    padding: 12px 2vw 8px 2vw;
+  }
+  .likes-hero h1 {
+    font-size: 1rem;
+  }
+  .MusicContainer {
+    gap: 6px;
+  }
+  .card {
+    width: 70px;
+    padding: 6px 2px 4px 2px;
+  }
+  .card img {
+    width: 36px;
+    height: 36px;
+  }
+  .track-title {
+    font-size: 0.75rem;
+  }
+  .track-artist {
+    font-size: 0.7rem;
   }
 }
 </style>

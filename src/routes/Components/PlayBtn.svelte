@@ -137,7 +137,7 @@
 
 <div class="PlayBtnContainer">
     <button aria-label="Musique Précedente" on:click={previousTrack}><i class="fa-solid fa-backward"></i></button>
-    <button aria-label="Play musique" on:click={handlePlayPause}>
+    <button aria-label="Play musique" on:click={handlePlayPause} class="playBtn">
         <i class={isPaused ? "fa-solid fa-play play" : "fa-solid fa-pause play"}></i>
     </button>
     <button aria-label="Musique suivante" on:click={nextTrack}><i class="fa-solid fa-forward"></i></button>
@@ -162,4 +162,36 @@
     button:hover{
         cursor: pointer;
     }
+.playBtn {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+    border: none;
+    box-shadow: 0 2px 8px var(--color-shadow);
+    color: #fff;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+    outline: none;
+}
+.playBtn:hover {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    box-shadow: 0 4px 16px var(--color-shadow);
+    transform: scale(1.10);
+}
+.playBtn:active {
+    background: var(--color-primary);
+    transform: scale(0.97);
+}
+@media (max-width: 600px) {
+    .playBtn {
+        width: 38px;
+        height: 38px;
+        font-size: 1.3rem;
+    }
+}
 </style>

@@ -9,6 +9,26 @@
     onDestroy(unsubscribe);
 </script>
 
+<style>
+.main-layout {
+    min-height: 100vh;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-bottom: 90px; /* Pour laisser la place au PlayBar */
+    transition: background var(--transition), color var(--transition);
+}
+@media (max-width: 700px) {
+    .main-layout {
+        padding-bottom: 120px;
+    }
+}
+</style>
+
 
 <div class="container">
     <slot/>
